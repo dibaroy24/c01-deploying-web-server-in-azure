@@ -35,6 +35,7 @@ Create a server image using Packer that anyone can use and leverage in the Terra
 * The resource group that you'll specify in the Packer for image is the same image specified in Terraform.
 
 ## Step 3: Create the infrastructure Terraform Template
+Create the infrastructure template for the application to run on. Here are the main steps:
 * Create a Resource Group.
 * Create a Virtual network and a subnet on that virtual network.
 * Create a Network Security Group. Ensure that you explicitly allow access to other VMs on the subnet and deny direct access from the internet.
