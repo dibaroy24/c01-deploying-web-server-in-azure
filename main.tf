@@ -54,36 +54,15 @@ resource "azurerm_public_ip" "myudacitypip" {
   }
 }
 
-resource "azurerm_network_security_group" "myudacityinweb" {
-  name                = "${var.prefix}-in-web-nsg"
-  location            = azurerm_resource_group.myudacityservice.location
-  resource_group_name = azurerm_resource_group.myudacityservice.name
-  security_rule {
-    access                     = "Allow"
-    direction                  = "Inbound"
-    name                       = "tls"
-    priority                   = 100
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    source_address_prefix      = "10.0.2.0/24"
-    destination_port_range     = "443"
-    destination_address_prefix = azurerm_subnet.myudacitysnet.address_prefix
-  }
-
-  tags = {
-    Environment = "Development"
-  }
-}
-
 resource "azurerm_network_security_group" "myudacityssh" {
-  name                = "${var.prefix}-in-ssh-nsg"
+  name                = "${var.prefix}-ssh-nsg"
   location            = azurerm_resource_group.myudacityservice.location
   resource_group_name = azurerm_resource_group.myudacityservice.name
   security_rule {
     access                     = "Allow"
     direction                  = "Inbound"
     name                       = "ssh"
-    priority                   = 200
+    priority                   = 100
     protocol                   = "Tcp"
     source_port_range          = "*"
     source_address_prefix      = "10.0.2.0/24"
@@ -96,20 +75,20 @@ resource "azurerm_network_security_group" "myudacityssh" {
   }
 }
 
-resource "azurerm_network_security_group" "myudacityoutweb" {
-  name                = "${var.prefix}-out-web-nsg"
+resource "azurerm_network_security_group" "myudacityweb" {
+  name                = "${var.prefix}-web-nsg"
   location            = azurerm_resource_group.myudacityservice.location
   resource_group_name = azurerm_resource_group.myudacityservice.name
   security_rule {
     access                     = "Deny"
-    direction                  = "Outbound"
-    name                       = "tls"
-    priority                   = 100
-    protocol                   = "Tcp"
+    direction                  = "Inbound"
+    name                       = "internet"
+    priority                   = 200
+    protocol                   = "Any"
     source_port_range          = "*"
-    source_address_prefix      = "10.0.2.0/24"
-    destination_port_range     = "443"
-    destination_address_prefix = azurerm_subnet.myudacitysnet.address_prefix
+    source_address_prefix      = "*"
+    destination_port_range     = "*"
+    destination_address_prefix = "*"
   }
 
   tags = {
