@@ -49,7 +49,7 @@ Create the infrastructure template for the application to run on. Here are the m
 
 This project contains a 'main.tf' file that needs to be updated with above mentioned resources to create the infrastructure template which is often referred to Infrastructure as Code [IaC].
 
-### ==================================================================================================
+### ==========================================================
 
 ### Input Variables:
 Input variables serve as parameters for a Terraform module, allowing aspects of the module to be customized without altering the module's own source code, and allowing modules to be shared between different configurations.
@@ -70,7 +70,7 @@ Variables that are stored and defined in the 'vars.tf' are as follows:
 * no_of_instances
 * admin_password
 
-### ==================================================================================================
+### ==========================================================
 
 ## Step 4: Deploying the infrastructure
 Now that your Packer and Terraform templates are written, it's time to deploy your work. Using a service principal or your own administrator account in Azure, you'll want to deploy your VM image using Packer.
