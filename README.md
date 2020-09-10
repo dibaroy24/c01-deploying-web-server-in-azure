@@ -47,6 +47,31 @@ Create the infrastructure template for the application to run on. Here are the m
 * Create managed disks for your virtual machines.
 * Ensure a variables file allows for customers to configure the number of virtual machines and the deployment at a minimum.
 
+This project contains a 'main.tf' file that needs to be updated with above mentioned resources to create the infrastructure template which is often referred to Infrastructure as Code [IaC].
+
+### ==================================================================================================
+
+### Input Variables:
+Input variables serve as parameters for a Terraform module, allowing aspects of the module to be customized without altering the module's own source code, and allowing modules to be shared between different configurations.
+
+1. Declaring an Input Variable:
+    * Each input variable accepted by a module must be declared using a variable block. 
+    * The label after the variable keyword is a name for the variable, which must be unique among all variables in the same module. This name is used to assign a value to the variable from outside and to reference the variable's value from within the module.
+    * The variable declaration can also include a default argument. If present, the variable is considered to be optional and the default value will be used if no value is set when calling the module or running Terraform.
+
+2. Input Variable Documentation:
+    * The purpose of each variable can be briefly described using the optional description argument.
+
+This project contains a 'var.tf' file to store such variables which will be referred by the Terraform infrastructure template described in the 'main.tf' file.
+Variables that are stored and defined in the 'vars.tf' are as follows:
+* location
+* prefix
+* resource_group_name
+* no_of_instances
+* admin_password
+
+### ==================================================================================================
+
 ## Step 4: Deploying the infrastructure
 Now that your Packer and Terraform templates are written, it's time to deploy your work. Using a service principal or your own administrator account in Azure, you'll want to deploy your VM image using Packer.
 

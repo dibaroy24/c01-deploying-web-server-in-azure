@@ -11,6 +11,19 @@ resource "azurerm_resource_group" "myudacityservice" {
   }
 }
 
+resource "azurerm_managed_disk" "example" {
+  name                 = "acctestmd"
+  location             = azurerm_resource_group.myudacityservice.location
+  resource_group_name  = azurerm_resource_group.myudacityservice.name
+  storage_account_type = "Standard_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = "1"
+
+  tags = {
+    Environment = "Development"
+  }
+}
+
 resource "azurerm_virtual_network" "myudacityvnet" {
   name                = "${var.prefix}-vnet"
   address_space       = ["10.0.0.0/16"]
@@ -41,8 +54,8 @@ resource "azurerm_public_ip" "myudacitypip" {
   }
 }
 
-resource "azurerm_network_security_group" "myudacityweb" {
-  name                = "${var.prefix}-web-nsg"
+resource "azurerm_network_security_group" "myudacityinweb" {
+  name                = "${var.prefix}-in-web-nsg"
   location            = azurerm_resource_group.myudacityservice.location
   resource_group_name = azurerm_resource_group.myudacityservice.name
   security_rule {
@@ -63,7 +76,7 @@ resource "azurerm_network_security_group" "myudacityweb" {
 }
 
 resource "azurerm_network_security_group" "myudacityssh" {
-  name                = "${var.prefix}-ssh-nsg"
+  name                = "${var.prefix}-in-ssh-nsg"
   location            = azurerm_resource_group.myudacityservice.location
   resource_group_name = azurerm_resource_group.myudacityservice.name
   security_rule {
@@ -75,6 +88,27 @@ resource "azurerm_network_security_group" "myudacityssh" {
     source_port_range          = "*"
     source_address_prefix      = "10.0.2.0/24"
     destination_port_range     = "22"
+    destination_address_prefix = azurerm_subnet.myudacitysnet.address_prefix
+  }
+
+  tags = {
+    Environment = "Development"
+  }
+}
+
+resource "azurerm_network_security_group" "myudacityoutweb" {
+  name                = "${var.prefix}-out-web-nsg"
+  location            = azurerm_resource_group.myudacityservice.location
+  resource_group_name = azurerm_resource_group.myudacityservice.name
+  security_rule {
+    access                     = "Deny"
+    direction                  = "Outbound"
+    name                       = "tls"
+    priority                   = 100
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "10.0.2.0/24"
+    destination_port_range     = "443"
     destination_address_prefix = azurerm_subnet.myudacitysnet.address_prefix
   }
 
